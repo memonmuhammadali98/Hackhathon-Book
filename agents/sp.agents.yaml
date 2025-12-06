@@ -1,0 +1,34 @@
+name: sp.agents
+description: >
+  Subagents for the Physical AI & Humanoid Robotics book project.
+  Each agent automates tasks using skills for code generation, simulation, personalization, and Urdu translation.
+
+agents:
+  - name: CodeAgent
+    description: >
+      Generates ROS2 launch files, Nav2 configs, Gazebo simulations,
+      and Unity humanoid articulation bodies for the modules.
+    uses_skills:
+      - WriteROS2LaunchFile
+      - GenerateNav2Config
+      - SimulateHumanoidGazebo
+      - ExplainVSLAMPipeline
+      - UnityArticulationBodyCreator
+
+  - name: PersonalizationAgent
+    description: >
+      Personalizes chapter content for logged-in users
+      and translates chapters to Urdu.
+    uses_skills:
+      - PersonalizeChapter
+      - TranslateToUrdu
+
+  - name: ChapterGenerationAgent
+    description: >
+      Combined agent for full chapter generation:
+      - Generates module content with code and diagrams
+      - Applies personalization
+      - Translates chapters to Urdu
+    uses_agents:
+      - CodeAgent
+      - PersonalizationAgent
