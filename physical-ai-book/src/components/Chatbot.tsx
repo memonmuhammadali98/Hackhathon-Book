@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import styles from './Chatbot.module.css';
 
 interface Message {
@@ -19,6 +20,13 @@ interface ChatbotProps {
 }
 
 const Chatbot: React.FC<ChatbotProps> = ({ apiUrl = 'http://localhost:8000' }) => {
+  console.log('Chatbot: API_URL', apiUrl);
+  const { token, user, isLoading: authLoading } = useAuth();
+  console.log('Chatbot: token', token);
+  console.log('Chatbot: user', user);
+  console.log('Chatbot: authLoading', authLoading);
+
+  
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -33,6 +41,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ apiUrl = 'http://localhost:8000' }) =
 
   // Listen for text selection
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+
     const handleSelection = () => {
       const selection = window.getSelection();
       const text = selection?.toString().trim();
@@ -50,12 +61,22 @@ const Chatbot: React.FC<ChatbotProps> = ({ apiUrl = 'http://localhost:8000' }) =
       ? `Based on this context: "${selectedText}"\n\nQuestion: ${userQuery}`
       : userQuery;
 
-    const response = await fetch(`${apiUrl}/query`, {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+
+    // Add auth token if available
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${apiUrl}/api/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
-        query: query,
-        top_k: 5
+        message: query,
+        selected_text: useSelectedText ? selectedText : undefined,
+        use_history: true
       })
     });
 
@@ -79,19 +100,14 @@ const Chatbot: React.FC<ChatbotProps> = ({ apiUrl = 'http://localhost:8000' }) =
     setIsLoading(true);
 
     try {
-      // Query the RAG backend
+      // Query the RAG backend with new enhanced endpoint
       const ragResults = await queryRAG(input, useSelectedText);
 
-      // Build context from results
-      const context = ragResults.results
-        .map((r: any, i: number) => `[${i + 1}] ${r.text}`)
-        .join('\n\n');
-
-      // Create response with sources
+      // Create response with answer and sources from new API format
       const assistantMessage: Message = {
         role: 'assistant',
-        content: `Based on the textbook content:\n\n${context}\n\nTo answer your question: ${input}\n\nThe relevant sections discuss ${ragResults.results[0]?.metadata?.heading || 'the topic'}.`,
-        sources: ragResults.results
+        content: ragResults.response || 'No answer available.',
+        sources: ragResults.sources || []
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -104,7 +120,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ apiUrl = 'http://localhost:8000' }) =
       console.error('Error querying RAG:', error);
       const errorMessage: Message = {
         role: 'assistant',
-        content: 'Sorry, I encountered an error while searching the textbook. Please make sure the RAG backend is running.'
+        content: 'Sorry, I encountered an error while searching the textbook. Please make sure the backend is running and you are signed in.'
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {

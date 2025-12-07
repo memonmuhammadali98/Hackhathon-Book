@@ -4,7 +4,15 @@
       "Bash(npx create-docusaurus@latest:*)",
       "Bash(pip install:*)",
       "Bash(python:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npm run start:*)",
+      "Bash(powershell:*)",
+      "Bash(dir:*)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(tasklist:*)"
     ],
     "deny": [],
     "ask": []

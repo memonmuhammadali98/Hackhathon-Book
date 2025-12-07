@@ -16,14 +16,16 @@ const config: Config = {
 
   // Set the production url of your site here
   url: 'https://fatimamudassir93.github.io',
+  
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/Hackhathon-ai-book/',
+  // Use '/' for local development, '/Hackhathon-AI-Book/' for production
+  baseUrl: process.env.NODE_ENV === 'development' ? '/' : '/Hackhathon-AI-Book/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'fatimamudassir93',
-  projectName: 'Hackhathon-ai-book',
+  projectName: 'Hackhathon-AI-Book',
 
   onBrokenLinks: 'throw',
 
@@ -44,7 +46,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/fatimamudassir93/Hackhathon-ai-book/tree/main/physical-ai-book/',
+            'https://github.com/fatimamudassir93/Hackhathon-AI-Book/tree/main/physical-ai-book/',
         },
         blog: {
           showReadingTime: true,
@@ -55,7 +57,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/fatimamudassir93/Hackhathon-ai-book/tree/main/physical-ai-book/',
+            'https://github.com/fatimamudassir93/Hackhathon-AI-Book/tree/main/physical-ai-book/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -70,7 +72,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/rebotics.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -89,7 +91,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/fatimamudassir93/Hackhathon-ai-book',
+          href: 'https://github.com/fatimamudassir93/Hackhathon-AI-Book',
           label: 'GitHub',
           position: 'right',
         },
@@ -133,7 +135,8 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/fatimamudassir93/Hackhathon-ai-book',
+              href: 'https://github.com/fatimamudassir93/Hackhathon-AI-Book',
+            
             },
           ],
         },
