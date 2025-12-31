@@ -239,3 +239,4 @@ For questions or feedback, please open an issue on GitHub.
 
 Built with ❤️ for the Physical AI and Robotics community
 Developed by **Muhammad Ali**
+npm i
