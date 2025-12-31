@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  # Allow manual trigger
   workflow_dispatch:
 
 permissions:
@@ -12,7 +11,6 @@ permissions:
   pages: write
   id-token: write
 
-# Cancel previous deployments
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -30,8 +28,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
-          cache-dependency-path: physical-ai-book/package-lock.json
+          # cache step temporarily removed to fix X arrow
+          # cache: npm
+          # cache-dependency-path: physical-ai-book/package-lock.json
 
       - name: Install dependencies
         run: |
